@@ -44,7 +44,7 @@ let data = [];
 for (let i = 0; i < 532; i++) {
   data.push([faker.internet.email(), faker.date.past()]);
 }
-console.log(data.length);
+console.log(data);
 
 const sql = 'INSERT INTO users (email, created_at) VALUES ?';
 
