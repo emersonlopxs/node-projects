@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ChatRoom</title>
+</head>
+<body>
+
+  <style>
+  
+    form {
+      padding: 20px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding-right: 50px;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background-color: #eee;
+    }
+  
+  </style>
+
+  <div class="container">
+
+    <div class="row">
+      <h1>Start messaging!</h1>
+      <ul id="messages"></ul>
+    </div>
+
+    <div class="row">
+      <form action="">
+        <input type="text" id="m" autocomplete="off" placeholder="message...">
+        <button type="submit">Send!</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  
+    const room = 'node';
+    const socket = io('/tech');
+    // const form = document.querySelector('form');
+    const m = document.querySelector('#m');
+    const messages = document.querySelector('#messages');
+    
+    // emiting the message to the server
+    document.querySelector('form').onsubmit = () => {
+      let msg = m.value;
+      socket.emit('message', { msg, room });
+      console.log(m.value);
+      m.value = '';
+      return false;
+    }
+
+    socket.on('connect', () => {
+      // amiting to everybody
+      socket.emit('join', { room });
+    });
+
+    // getting the messages that someone sent
+    socket.on('message', (msg) => {
+      message = document.createElement('li');
+      message.innerHTML = msg;
+      messages.appendChild(message);
+    })
+
+
+  </script>
+
+</body>
+</html>
